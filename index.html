@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#ffe3ee" />
+  <title>A little date-night question 💗</title>
+  <style>
+    :root {
+      --pink: #ffe3ee;
+      --deep: #b83268;
+      --rose: #e85d91;
+      --ink: #64243f;
+      --cream: #fffafc;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0; min-height: 100vh; overflow-x: hidden;
+      display: grid; place-items: center; padding: 24px;
+      color: var(--ink);
+      font-family: ui-rounded, "Arial Rounded MT Bold", "Trebuchet MS", system-ui, sans-serif;
+      background:
+        radial-gradient(circle at 15% 18%, #fff7fa 0 7%, transparent 7.5%),
+        radial-gradient(circle at 85% 82%, #ffd0e2 0 8%, transparent 8.5%),
+        linear-gradient(135deg, #fff0f6, var(--pink) 55%, #ffd4e5);
+    }
+    .floaties { position: fixed; inset: 0; pointer-events: none; overflow: hidden; }
+    .floaty {
+      position: absolute; bottom: -50px; opacity: .45;
+      animation: floatUp linear infinite;
+      filter: drop-shadow(0 3px 5px #d95b8b22);
+    }
+    @keyframes floatUp {
+      from { transform: translateY(0) rotate(0deg); opacity: 0; }
+      15% { opacity: .5; }
+      to { transform: translateY(-115vh) rotate(35deg); opacity: 0; }
+    }
+    .card {
+      width: min(100%, 560px); position: relative; z-index: 1;
+      padding: clamp(28px, 7vw, 52px) clamp(22px, 6vw, 48px);
+      text-align: center; border: 1px solid #ffffffc9;
+      border-radius: 32px; background: #fffafce8;
+      box-shadow: 0 22px 70px #a83c6822, inset 0 1px 0 #fff;
+      backdrop-filter: blur(12px);
+    }
+    .topline {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 8px 15px; border-radius: 999px;
+      background: #ffe5ef; color: #a93666;
+      font-size: 12px; font-weight: 800; letter-spacing: .13em;
+      text-transform: uppercase;
+    }
+    .bee { font-size: 46px; margin: 20px 0 8px; animation: bob 2.2s ease-in-out infinite; }
+    @keyframes bob { 50% { transform: translateY(-7px) rotate(5deg); } }
+    h1 {
+      margin: 10px 0 0; color: var(--deep);
+      font-size: clamp(29px, 7vw, 43px); line-height: 1.25;
+      letter-spacing: -.04em;
+    }
+    .message {
+      margin: 24px 0 28px; font-size: clamp(18px, 4.5vw, 22px);
+      line-height: 1.8; font-weight: 800; color: #71304d;
+    }
+    .message span { display: block; }
+    .question { margin: 0 0 22px; font-size: 16px; color: #9a5572; font-weight: 700; }
+    .button-zone {
+      min-height: 64px; display: flex; align-items: center;
+      justify-content: center; gap: 14px; position: relative;
+    }
+    button {
+      border: 0; border-radius: 999px; padding: 15px 30px;
+      font: inherit; font-size: 16px; font-weight: 900;
+      cursor: pointer; transition: transform .18s, box-shadow .18s;
+      touch-action: manipulation;
+    }
+    #yes {
+      color: white; background: linear-gradient(135deg, #ed6b9d, #c83d76);
+      box-shadow: 0 9px 22px #c83d7640;
+    }
+    #yes:hover { transform: translateY(-3px) scale(1.04); box-shadow: 0 13px 26px #c83d7650; }
+    #no {
+      color: #a3476b; background: #ffe2ed; border: 1px solid #f8c4d8;
+      box-shadow: 0 6px 15px #a83c6812;
+      position: relative; z-index: 2;
+    }
+    .hint { margin: 22px 0 0; font-size: 12px; color: #bd7b96; }
+    .modal-backdrop {
+      position: fixed; inset: 0; z-index: 10; display: none;
+      place-items: center; padding: 20px;
+      background: #54243dbb; backdrop-filter: blur(7px);
+    }
+    .modal-backdrop.show { display: grid; animation: fadeIn .25s ease; }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    .modal {
+      width: min(100%, 440px); padding: 38px 28px 32px;
+      border-radius: 30px; text-align: center; position: relative;
+      background: linear-gradient(160deg, #fffafd, #ffe8f1);
+      box-shadow: 0 25px 80px #2b102055;
+      animation: pop .4s cubic-bezier(.2,1.5,.5,1);
+    }
+    @keyframes pop { from { transform: scale(.75); } to { transform: scale(1); } }
+    .modal-heart { font-size: 54px; }
+    .modal h2 { color: var(--deep); font-size: 29px; margin: 12px 0; }
+    .modal p { color: #82445f; line-height: 1.7; margin: 0 0 22px; }
+    #close { background: #cf4d80; color: white; padding: 12px 25px; }
+    .sparkle {
+      position: fixed; z-index: 20; pointer-events: none;
+      animation: burst 1.25s ease-out forwards;
+    }
+    @keyframes burst {
+      from { transform: translate(0,0) scale(.5) rotate(0); opacity: 1; }
+      to { transform: translate(var(--x), var(--y)) scale(1.3) rotate(180deg); opacity: 0; }
+    }
+    @media (max-width: 420px) {
+      .button-zone { gap: 10px; }
+      button { padding: 14px 23px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; transition-duration: .01ms !important; }
+    }
+  </style>
+</head>
+<body>
+  <div class="floaties" aria-hidden="true" id="floaties"></div>
+
+  <main class="card">
+    <div class="topline">A tiny question for you <span>♡</span></div>
+    <div class="bee" aria-hidden="true">🐝</div>
+    <h1>Hey, Honey!</h1>
+    <div class="message">
+      <span>It's 26th Honey🍯🐝</span>
+      <span>🫦This Can't Get Any Real👀</span>
+      <span>💋Date Night ALERT‼️‼️</span>
+    </div>
+    <p class="question">So… are you coming to dinner with me? 💗</p>
+    <div class="button-zone" id="buttonZone">
+      <button id="yes" type="button">YES! 💖</button>
+      <button id="no" type="button" aria-label="No (try catching it!)">NO 🙈</button>
+    </div>
+    <p class="hint">P.S. One of these buttons is feeling a little shy…</p>
+  </main>
+
+  <div class="modal-backdrop" id="modalBackdrop" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal">
+      <div class="modal-heart">💌✨💗</div>
+      <h2 id="modalTitle">YAYYYYY! 🥂</h2>
+      <p><strong>Be a part of it to know more…</strong><br />Your only clue: dress cute, bring that smile, and leave the rest to me. 😉<br /><br />It's a date, Honey! 🍯🐝</p>
+      <button id="close" type="button">I can't wait! 💋</button>
+    </div>
+  </div>
+
+  <script>
+    const noButton = document.getElementById('no');
+    const zone = document.getElementById('buttonZone');
+    const yesButton = document.getElementById('yes');
+    const backdrop = document.getElementById('modalBackdrop');
+
+    function moveNoButton() {
+      const zoneRect = zone.getBoundingClientRect();
+      const buttonRect = noButton.getBoundingClientRect();
+      const padding = 4;
+      const maxX = Math.max(padding, zoneRect.width - buttonRect.width - padding);
+      const maxY = 72;
+      const x = padding + Math.random() * Math.max(0, maxX - padding);
+      const y = (Math.random() * 2 - 1) * maxY;
+      noButton.style.position = 'absolute';
+      noButton.style.left = `${Math.min(x, maxX)}px`;
+      noButton.style.top = '50%';
+      noButton.style.transform = `translateY(calc(-50% + ${y}px))`;
+    }
+
+    // It dodges the pointer, and also jumps if someone manages to tap it.
+    noButton.addEventListener('pointerenter', moveNoButton);
+    noButton.addEventListener('pointerdown', (event) => {
+      event.preventDefault();
+      moveNoButton();
+    });
+    noButton.addEventListener('click', (event) => {
+      event.preventDefault();
+      moveNoButton();
+    });
+
+    function celebrate() {
+      const symbols = ['💗', '💖', '💕', '✨', '🌸', '💋'];
+      for (let i = 0; i < 34; i++) {
+        const piece = document.createElement('span');
+        piece.className = 'sparkle';
+        piece.textContent = symbols[Math.floor(Math.random() * symbols.length)];
+        piece.style.left = `${window.innerWidth / 2}px`;
+        piece.style.top = `${window.innerHeight / 2}px`;
+        piece.style.setProperty('--x', `${(Math.random() - .5) * window.innerWidth}px`);
+        piece.style.setProperty('--y', `${(Math.random() - .5) * window.innerHeight}px`);
+        piece.style.fontSize = `${16 + Math.random() * 18}px`;
+        document.body.appendChild(piece);
+        setTimeout(() => piece.remove(), 1300);
+      }
+    }
+
+    yesButton.addEventListener('click', () => {
+      backdrop.classList.add('show');
+      celebrate();
+      document.getElementById('close').focus();
+    });
+    document.getElementById('close').addEventListener('click', () => {
+      backdrop.classList.remove('show');
+    });
+    backdrop.addEventListener('click', (event) => {
+      if (event.target === backdrop) backdrop.classList.remove('show');
+    });
+    document.addEventListener('keydown', (event) => {
+      if (event.key === 'Escape') backdrop.classList.remove('show');
+    });
+
+    // Soft floating hearts and flowers in the background.
+    const floaties = document.getElementById('floaties');
+    ['♡', '💗', '✿', '💕', '✨'].forEach((symbol, index) => {
+      for (let i = 0; i < 3; i++) {
+        const item = document.createElement('span');
+        item.className = 'floaty';
+        item.textContent = symbol;
+        item.style.left = `${(index * 19 + i * 7) % 100}%`;
+        item.style.fontSize = `${18 + ((index + i) % 3) * 10}px`;
+        item.style.animationDuration = `${10 + i * 4 + index}s`;
+        item.style.animationDelay = `${-i * 4 - index}s`;
+        floaties.appendChild(item);
+      }
+    });
+  </script>
+</body>
+</html>
